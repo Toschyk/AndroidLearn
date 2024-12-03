@@ -1155,4 +1155,1859 @@ public class MainActivity extends AppCompatActivity {
 }
 ```
 
-## 2.6
+## 2.6 Java и Android | ConstraintLayout
+
+ConstraintLayout представляет контейнер, который позволяет создавать гибкие и масштабируемые визуальные интерфейсы.
+
+Для позиционирования элемента внутри ConstraintLayout необходимо указать ограничения (constraints). Есть несколько типов ограничений. В частности, для установки позиции относительно определенного элемента испльзуются следующие ограничения:
+
+-    layout_constraintLeft_toLeftOf: левая граница позиционируется относительно левой границы другого элемента
+
+-    layout_constraintLeft_toRightOf: левая граница позиционируется относительно правой границы другого элемента
+
+-    layout_constraintRight_toLeftOf: правая граница позиционируется относительно левой границы другого элемента
+
+-    layout_constraintRight_toRightOf: правая граница позиционируется относительно правой границы другого элемента
+
+-    layout_constraintTop_toTopOf: верхняя граница позиционируется относительно верхней границы другого элемента
+
+-    layout_constraintTop_toBottomOf: верхняя граница позиционируется относительно нижней границы другого элемента
+
+-    layout_constraintBottom_toBottomOf: нижняя граница позиционируется относительно нижней границы другого элемента
+
+-    layout_constraintBottom_toTopOf: нижняя граница позиционируется относительно верхней границы другого элемента
+
+-    layout_constraintBaseline_toBaselineOf: базовая линия позиционируется относительно базовой линии другого элемента
+
+-    layout_constraintStart_toEndOf: элемент начинается там, где завершается другой элемент
+
+-    layout_constraintStart_toStartOf: элемент начинается там, где начинается другой элемент
+
+-    layout_constraintEnd_toStartOf: элемент завершается там, где начинается другой элемент
+
+-    layout_constraintEnd_toEndOf: элемент завершается там, где завершается другой элемент
+
+Возможно, по поводу четырех последних свойств возникло некоторое непонимание, что подразумевается под началом или завершением элемента. Дело в том, что некоторые языки (например, арабский или фарси) имеют правостороннюю ориентацию, то есть символы идут справа налево, а не слева направо, как в европейских языках. И в зависимости от текущей ориентации - левосторонняя или правосторонняя - будет изменяться то, где именно начало, а где завершение элемента. Например, при левосторонней ориентации начало - слева, а завершение - справа, поэтому атрибут layout_constraintStart_toEndOf фактически будет аналогичен атрибуту layout_constraintLeft_toRightOf. А при правосторонней ориентации - атрибуту layout_constraintRight_toLeftOf, так как начало справа, а завершение - слева
+
+Каждое ограничение устанавливает позиционирование элемента либо по горизонтали, либо по вертикали. И для определения позиции элемента в ConstraintLayout необходимо указать как минимум одно ограничение по горизонтали и одно ограничение по вертикали.
+
+Позиционирования может производиться относительно границ самого контейнера ContentLayout (в этом случае ограничение имеет значение parent), либо же относительно любого другого элемента внутри ConstraintLayout, тогда в качестве значения ограничения указывается id этого элемента.
+
+Простейший пример:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+ 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+В данном случае у элемента TextView установлено два ограничение: одно погоризонтальной линии (app:layout_constraintLeft_toLeftOf="parent"), второе - по вертикальной линии (app:layout_constraintTop_toTopOf="parent"). Оба ограничения устанавливаются относительно контейнера ConstraintLayout, поэтому они принимают значение parent, то есть ConstraintLayout.
+
+Ограничение app:layout_constraintLeft_toLeftOf="parent" устанавливает левую границу TextView у левой границы контейнера.
+
+Ограничение app:layout_constraintTop_toTopOf="parent" устанавливает верхнюю границу TextView у верхней границы контейнера.
+
+В итоге TextView будет располагаться в верхнем левом углу контейнера.
+
+Стоит обратить внимание, что все эти атрибуты ограничений берутся из пространства имен "http://schemas.android.com/apk/res-auto", которое проецируется на префикс app.
+
+Если необходимо установить ограничение относительно другого элемента, то необходимо указать id этого элемента:
+
+```java
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+ 
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:hint="Введите Email"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Отправить"
+        app:layout_constraintLeft_toRightOf="@id/editText"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+Здесь для текстового поля ввода EditText устанавливаются два ограничения относительно родительского контейнера ConstraintLayout, поэтому ограничения имеют значение parent, а сам EditText выравнивается по левой и верхней границе контейнера. Верхняя граница кнопки Button также выравнивается по верхней границе контейнера. А вот левая граница кнопки выравнивается по правой границе EditText. Для этого в качестве значения атрибута передается id EditText:
+
+```java
+app:layout_constraintLeft_toRightOf="@id/editText"
+```
+
+Подобным образом можно составлять различные комбинации атрибутов для определения нужного нам позиционирования. Например, изменим код кнопки:
+
+```java
+<Button
+    android:id="@+id/button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Отправить"
+    app:layout_constraintLeft_toRightOf="@id/editText"
+    app:layout_constraintTop_toBottomOf="@id/editText" />
+```
+
+В данном случае верхняя граница кнопки выравнивается по нижней границе EditText
+
+Более того мы можем позиционировать оба элемента один относительно другого:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+ 
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Введите Email"
+        app:layout_constraintRight_toLeftOf="@+id/button"
+        app:layout_constraintTop_toTopOf="parent" />
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Отправить"
+        app:layout_constraintLeft_toRightOf="@id/editText"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+### Позиционирование в центре
+
+Если необходимо расположить элемент в центре контейнера по вертикали, то надо использовать пару атрибутов
+
+```java
+app:layout_constraintTop_toTopOf="parent"
+app:layout_constraintBottom_toBottomOf="parent"
+```
+
+Если необходимо расположить элемент в центре контейнера по горизонтали, то надо использовать следующую пару атрибутов
+
+```java
+app:layout_constraintLeft_toLeftOf="parent"
+app:layout_constraintRight_toRightOf="parent"
+```
+
+Соответственно для расположения в центре контейнера по вертикали и горизонтали надо применить все выше указанные четыре атрибута:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+ 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello Android"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+### Сдвиг
+
+Сдвиг
+
+Если элементы расположены по центру, ConstraintLayout позволяет их сдвигать по горизонтали и по вертикали. Для сдвига по горизонтали применяется атрибут layout_constraintHorizontal_bias, а для сдвига по вертикали - атрибут layout_constraintVertical_bias. В качестве значения они принимают число с плавающей точкой от 0 до 1. Значение по умолчанию - 0.5 (расположение по центру). Например:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+ 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Top TextView"
+        android:textSize="30sp"
+        android:background="#e0e0e0"
+ 
+        app:layout_constraintHorizontal_bias="0.2"
+ 
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+ 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bottom TextView"
+        android:textSize="30sp"
+        android:background="#e0e0e0"
+ 
+        app:layout_constraintHorizontal_bias=".9"
+ 
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+Первый TextView сдвигается на 20% от левой границы контейнера (значение по умолчанию - 0.5, поэтому при значении 0.2 элемент сдвигается влево). Второй TextView сдвигается на 90% от левой границы контейнера. Например, значение 1 означало бы, что элемент придвинут к правой границе, а значение 0 - к левой
+
+Аналогично работает атрибут layout_constraintVertical_bias, который сдвигает по вертикали.
+
+## 2.7 Java и Android | Размеры элементов в ConstraintLayout
+
+В ConstraintLayout применяются три способа установки размеров:
+
+  -  Установка точных размеров, например, 123dp
+
+  - Значение WRAP_CONTENT, которое задает для виджета размеры, достаточные для расположения его содержимого
+
+  - Значение 0dp, которое эквивалентно значению "MATCH_CONSTRAINT" в коде Java. В этом случае размеры элемента устанавливаются исходя из указанных для него ограничений. По умолчанию элемент занимает все доступное пространство.
+
+Применим все три типа установки размеров:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+ 
+    <TextView
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:text="Top TextView"
+        android:textSize="30sp"
+        android:background="#e0e0e0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+ 
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Center TextView"
+        android:textSize="30sp"
+        android:background="#e0e0e0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+ 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bottom TextView"
+        android:textSize="30sp"
+        android:background="#e0e0e0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+Здесь создаются три элемента TextView. Все они центрируются по горизонтали, но по вертикали располагаются по верхней и нижней границе контейнера и в центре. Для всех трех TextView для высоты задано значение wrap_content, то есть все три элемента будут занимать ту высоту, которая для них предпочтительна, чтобы вместить содержимое:
+
+```java
+android:layout_height="wrap_content"
+```
+
+Однако для каждого элемента заданы свои настройки ширины. Для верхнего TextView установлены точные размеры - 160 единиц:
+
+```java
+android:layout_width="160dp"
+```
+
+Для центрального TextView установлено значение "0dp", благодаря чему элемент по умолчанию будет занимать все доступное для него пространство (в данном случае растягиваться по горизонтали):
+
+```java
+android:layout_width="0dp"
+```
+
+Для нижнего TextView установлено значение "wrap_content", то есть элемент будет принимать ту ширину, которая необходима для вмещения его содержимого:
+
+```java
+android:layout_width="wrap_content"
+```
+
+Стоит отметить, что во вложенных виджетах в ConstraintLayout не рекомендуется использовать значение match_parent, которое позволяет виджету занять все доступное пространство. Вместо этого рекомендуется использовать 0dp или "MATCH_CONSTRAINT" - вместе с другими ограничениями они дадут необходимый эффект. Так, для растяжения по ширине контейнера применяются следующие атрибуты:
+
+```java
+android:layout_width="0dp"
+app:layout_constraintLeft_toLeftOf="parent"
+app:layout_constraintRight_toRightOf="parent"
+```
+
+А для растяжения по высоте контейнера применяются следующие атрибуты:
+
+```java
+android:layout_height="0dp"
+app:layout_constraintTop_toTopOf="parent"
+app:layout_constraintBottom_toBottomOf="parent"
+```
+
+Например, растяжение TextView по всей длине и ширине контейнера:
+
+```java
+<TextView
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:text="Hello Android"
+    android:textSize="30sp"
+    android:background="#e0e0e0"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"/>
+```
+
+### Минимальные и максимальные размеры
+
+Ряд атрибутов задают максимальные и минимальные размеры:
+
+ -   layout_constraintWidth_min и layout_constraintHeight_min: представляют соответственно минимальную ширину и высоту
+
+ -   layout_constraintWidth_max и layout_constraintHeight_max: представляют соответственно максимальную ширину и высоту
+
+В качестве значения они принимают точное значение в dp или значение wrap (аналогично wrap_content). Например:
+
+```java
+<TextView
+    android:layout_width="260dp"
+    android:layout_height="wrap_content"
+    android:text="Hello Android"
+    android:textSize="30sp"
+    android:background="#e0e0e0"
+ 
+    app:layout_constraintHeight_max="200dp"
+    app:layout_constraintWidth_max="200dp"
+    app:layout_constraintHeight_min="wrap"
+    app:layout_constraintWidth_min="wrap"
+ 
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"/>
+```
+
+Хотя в данном случае ширина TextView установлена в 260dp, поскольку максимальная ширина задана в 200dp, то реальная ширина не превысит 200dp.
+
+### Размеры в процентах
+
+Атрибут layout_constraintWidth_percent задает ширину элемента в процентах по отношению к доступному пространству по горизонтали. Аналогично атрибут layout_constraintHeight_percent задает высоту в процентах по отношению к доступному пространству по вертикали.
+
+Для их применения необходимо соблюсти следующие условия:
+
+-    Соответствующий атрибут для установки размера (android:layout_width - если мы устанавливаем ширину или android:layout_height - если мы устанавливаем ввысоту в процентах) должен иметь значение MATCH_CONSTRAINT или 0dp
+
+-   Также необходимо установить атрибут app:layout_constraintWidth_default="percent" при установке ширины и app:layout_constraintHeight_default="percent" при установке высоты
+
+В качестве значения атрибуты layout_constraintWidth_percent и layout_constraintHeight_percent принимают дробное число от 0 до 1.
+
+Например, пусть TextView занимает по вертикали 25%, а по горизонтали 50% пространства:
+
+```java	
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+ 
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Hello Android"
+        android:textSize="30sp"
+        android:background="#e0e0e0"
+         
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintHeight_default="percent"
+         
+        app:layout_constraintWidth_percent="0.5"
+        app:layout_constraintHeight_percent="0.25"
+         
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+Другой пример - пропорциональное разделение пространства между несколькими элементами:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+ 
+    <EditText
+        android:id="@+id/editText"
+        android:hint="Введите Email"
+        android:layout_height="wrap_content"
+         
+        android:layout_width="0dp"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.66"
+         
+        app:layout_constraintRight_toLeftOf="@+id/button"
+        app:layout_constraintTop_toTopOf="parent" />
+    <Button
+        android:id="@+id/button"
+        android:text="Отправить"
+        android:layout_height="wrap_content"
+         
+        android:layout_width="0dp"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.33"
+         
+        app:layout_constraintLeft_toRightOf="@id/editText"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+В данном случае текстового поле EditText будет занимать 66%, а кнопка - 33% ширины:
+
+### Установка соотношения высоты и ширины
+
+ConstraintLayout также позволяет устанавливать у элементов высоту относительно ширины / ширину относительно высоты. Для этого применяется атрибут layout_constraintDimensionRatio. В качестве значения он принимает отношение в виде Width:Height, например, 1:0.5 - здесь число 1 представляет ширину, а 0.5 - высоту. То есть ширина будет в два раза больше высоты. Но при этом хотя для одного измерения должно быть установлено 0dp (MATCH_CONSTRAINT). Например:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+ 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:text="Hello Android"
+        android:textSize="30sp"
+        android:background="#e0e0e0"
+        app:layout_constraintDimensionRatio="1:0.6"
+ 
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+В данном случае ширина TextView будет такой, какая необходима для его содержимого, а высота 60% от ширины.
+
+Если и для ширины, и для высоты установлено 0dp, то в этом случае система выберет наибольшее измерение, которое соответствует всем ограничениям, и относительно него установит значение другого измерения. Чтобы конкретизировать измерение, относительно которого будет идти расчет, можно указать символ W (ширина) или H (высота). Например:
+
+```java
+<TextView
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:text="Hello Android"
+    android:textSize="30sp"
+    android:background="#e0e0e0"
+         
+    app:layout_constraintDimensionRatio="W, 1:4"
+ 
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"/>
+```
+
+В данном случае ширина будет в 4 раза меньше высоты.
+
+## 2.8 Java и Android | Цепочки элементов в ConstraintLayout
+
+ConstraintLayout позволяет организовать расположение элементов в ряд по горизонтали или по вертикали или то, что в Android называется chains или цепочки. Мы можем по цепочке установить позиционирование одного элемента относительно другого и таким обазом организовать ряд элементов.
+
+### Горизонтальная цепочка элементов
+
+Например, ряд элементов по горизонтали:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+ 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#efefef"
+        android:text="First"
+        android:textSize="30sp"
+        app:layout_constraintRight_toLeftOf="@id/textView2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#e0e0e0"
+        android:text="Second"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toRightOf="@id/textView1"
+        app:layout_constraintRight_toLeftOf="@id/textView3"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#efefef"
+        android:text="Third"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toRightOf="@id/textView2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+В итоге элементы цепочки равномерно будут растянуты по всей ширине контейнера:
+
+Горизонтальная цепочка элементов достигается за счет двух факторов:
+
+-    Первый элемент выравнивается относительно левой границы контейнера (app:layout_constraintLeft_toLeftOf="parent"), последний элемент выравнивается относительно правой границы контейнера (app:layout_constraintRight_toRightOf="parent").
+
+-    Благодаря установке атрибутов app:layout_constraintLeft_toRightOf и app:layout_constraintRight_toLeftOf располагаем один элемент справа или слева от другого.
+
+Кроме того, ConstraintLayout позволяет настроить положение элементов внутри цепочки. Для этого применяется атрибут layout_constraintHorizontal_chainStyle, который может принимать следующие значения:
+
+-    spread: значение по умолчанию, при котором элементы цепочки равномерно растягиваются по всей длине цепочки, как в примере выше
+
+-    spread_inside: первый и последний элемент цепочки примыкают к границами контейнера
+
+-    packed: элементы цепочки располагаются вплотную друг к другу.
+
+Например, применим значение spread_inside:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+ 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#efefef"
+        android:text="First"
+        android:textSize="30sp"
+ 
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+ 
+        app:layout_constraintRight_toLeftOf="@id/textView2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#e0e0e0"
+        android:text="Second"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toRightOf="@id/textView1"
+        app:layout_constraintRight_toLeftOf="@id/textView3"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#efefef"
+        android:text="Third"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toRightOf="@id/textView2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+Причем в данном случае достаточно установить атрибут у первого элемента цепочки:
+
+Значение packed:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+ 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#efefef"
+        android:text="First"
+        android:textSize="30sp"
+ 
+        app:layout_constraintHorizontal_chainStyle="packed"
+ 
+        app:layout_constraintRight_toLeftOf="@id/textView2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#e0e0e0"
+        android:text="Second"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toRightOf="@id/textView1"
+        app:layout_constraintRight_toLeftOf="@id/textView3"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#efefef"
+        android:text="Third"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toRightOf="@id/textView2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+### Вес элемента
+
+Стоит отметить, что выше у элементов устанавливалась ширина, необходимая для их содержимого. Но мы могли бы установить и нулевую ширину, тогда элементы равномерно бы распределялись по всей цепочки без образования промежутков между ними.
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+ 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#efefef"
+        android:text="First"
+        android:textSize="30sp"
+        app:layout_constraintRight_toLeftOf="@id/textView2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#e0e0e0"
+        android:text="Second"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toRightOf="@id/textView1"
+        app:layout_constraintRight_toLeftOf="@id/textView3"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#efefef"
+        android:text="Third"
+        android:textSize="30sp"
+        app:layout_constraintLeft_toRightOf="@id/textView2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+В этом случае значение атрибута app:layout_constraintHorizontal_chainStyle не играет никакой роли, так как все элементы итак растягиваются по всей цепочке.
+
+Однако такое поведение может не устраивать, например, мы хотим, чтобы один элемент был два раза больше другого. И в этом случае мы можем с помощью атрибута layout_constraintHorizontal_weight. Однако следует учитывать, что при применении весов у элементов, они должны иметь нулевую ширину:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+ 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#efefef"
+        android:text="First"
+        android:textSize="30sp"
+         
+        app:layout_constraintHorizontal_weight="1"
+         
+        app:layout_constraintRight_toLeftOf="@id/textView2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#e0e0e0"
+        android:text="Second"
+        android:textSize="30sp"
+         
+        app:layout_constraintHorizontal_weight="2"
+         
+        app:layout_constraintLeft_toRightOf="@id/textView1"
+        app:layout_constraintRight_toLeftOf="@id/textView3"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#efefef"
+        android:text="Third"
+        android:textSize="30sp"
+ 
+        app:layout_constraintHorizontal_weight="1"
+         
+        app:layout_constraintLeft_toRightOf="@id/textView2"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+В качестве значения атрибут layout_constraintHorizontal_weight принимает число - вес элемента. Так, в данном случае вес первого элемента - 1, вес второго - 2, а вес третьего - 1. Поэтому вся ширина контейнера будет условно поделена на 1 + 2 + 1 = 4 частей, из которых по одной части займут первый и третий элемент, а второй займет 2 части, то есть второй элемент будет в два раза больше первого и третьего элемента.
+
+В принципе мы можем оставить элементы и с шириной "wrap_content" или конкретным значением, отличным от "0dp", просто в этом случае они не будут участвовать в распределении пространства контейнера и вес у такого элемента роли играть не будет.
+
+### Вертикальная цепочка
+
+Для образования вертикальной цепочки также должно соблюдаться два условия:
+
+-    Первый элемент выравнивается относительно верхней границы контейнера (app:layout_constraintTop_toTopOf="parent"), последний элемент выравнивается относительно нижней границы контейнера (app:layout_constraintBottom_toBottomOf="parent").
+
+-    Благодаря установке атрибутов app:layout_constraintBottom_toTopOf и app:layout_constraintBottom_toTopOf располагаем один элемент поверх другого.
+
+Чтобы настроить положение элементов внутри цепочки, применяется атрибут layout_constraintVertical_chainStyle, который может принимать следующие значения:
+
+-    spread: значение по умолчанию, при котором элементы цепочки равномерно растягиваются по всей длине цепочки
+
+-    spread_inside: первый и последний элемент цепочки примыкают к границами контейнера
+
+ -   packed: элементы цепочки прилегают вплотную друг к другу.
+
+Например, вертикальная цепочка со значением по умолчанию - spread:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+ 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:background="#efefef"
+        android:text="First"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@id/textView2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:background="#e0e0e0"
+        android:text="Second"
+        android:textSize="30sp"
+        app:layout_constraintTop_toBottomOf="@id/textView1"
+        app:layout_constraintBottom_toTopOf="@id/textView3"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+ 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:background="#efefef"
+        android:text="Third"
+        android:textSize="30sp"
+ 
+        app:layout_constraintTop_toBottomOf="@id/textView2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+Также достаточно применить к первому элементу цепочки атрибут layout_constraintVertical_chainStyle, чтобы изменить положение элементов:
+
+```java
+<TextView
+        android:id="@+id/textView1"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:background="#efefef"
+        android:text="First"
+        android:textSize="30sp"
+         
+        app:layout_constraintVertical_chainStyle="spread_inside"
+         
+        app:layout_constraintBottom_toTopOf="@id/textView2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+```
+
+И как при горизонтальной ориентации в вертикальной цепочки можно использовать вес элементов с помощью атрибута layout_constraintVertical_weight. Для установки веса у элемента в качестве высоты должно быть установлено значение 0dp
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+ 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="200dp"
+        android:layout_height="0dp"
+        android:background="#efefef"
+        android:text="First"
+        android:textSize="30sp"
+        app:layout_constraintVertical_weight="1"
+        app:layout_constraintBottom_toTopOf="@id/textView2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="200dp"
+        android:layout_height="0dp"
+        android:background="#e0e0e0"
+        android:text="Second"
+        android:textSize="30sp"
+        app:layout_constraintVertical_weight="3"
+        app:layout_constraintTop_toBottomOf="@id/textView1"
+        app:layout_constraintBottom_toTopOf="@id/textView3"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+ 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="200dp"
+        android:layout_height="0dp"
+        android:background="#efefef"
+        android:text="Third"
+        android:textSize="30sp"
+        app:layout_constraintVertical_weight="2"
+        app:layout_constraintTop_toBottomOf="@id/textView2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+Совокупный вес элементов в данном случае 1 + 3 + 2 = 6. Поэтому вся высота контейнера будет делиться на 6 частей, из которых первый элемент займет 1 часть, второй - 3 части и третий - 2 части в соответствии со своим весом.
+
+## 2.9 Java и Android | Программное создание ConstraintLayout и позиционионирование
+
+Для создания контейнера в коде Java применяется одноименный класс ConstraintLayout, для создания объекта которого в конструктор передаются значения для ширины и высоты элемента:
+
+```java
+ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams
+                (ConstraintLayout.LayoutParams.WRAP_CONTENT , ConstraintLayout.LayoutParams.WRAP_CONTENT);
+```
+
+Первый параметр устанавливает щирину элемента, а второй - высоту. ConstraintLayout.LayoutParams.WRAP_CONTENT указывает, что элемент будет иметь те размеры, которые необходимы для того, чтобы вывести на экран его содержимое. Кроме ConstraintLayout.LayoutParams.WRAP_CONTENT можно применять константу ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, которая аналогична применению значения "0dp" в атрибутах layout_width и layout_height и которая растягивает элемент по ширине или высоте контейнера.
+
+Также можно использовать точные размеры, например:
+
+```java
+ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams
+                (ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, 200);
+```
+
+Для настройки позиционирования внутри ConstraintLayout применяется класс ConstraintLayout.LayoutParams. Он имеет довольно много функционала. Рассмотрим в данном случае только те поля, которые позволяют установить расположение элемента:
+
+-    baselineToBaseline: выравнивает базовую линию элемента по базовой линии другого элемента, id которого присваивается свойству.
+
+-    bottomToBottom: выравнивает нижнюю границу элемента по нижней границе другого элемента.
+
+-    bottomToTop: выравнивает нижнюю границу элемента по верхней границе другого элемента.
+
+-    leftToLeft: выравнивает левую границу элемента по левой границе другого элемента.
+
+-    leftToRight: выравнивает левую границу элемента по правой границе другого элемента.
+
+-    rightToLeft: выравнивает правую границу элемента по левой границе другого элемента.
+
+-    rightToRight: выравнивает правую границу элемента по правой границе другого элемента.
+
+-    startToEnd: выравнивает начало элемента по завершению другого элемента.
+
+-    startToStart: выравнивает начало элемента по началу другого элемента.
+
+-    topToBottom: выравнивает верхнюю границу элемента по нижней границе другого элемента.
+
+-    topToTop: выравнивает верхнюю границу элемента по верхней границе другого элемента.
+
+-    endToEnd: выравнивает заврешение элемента по завершению другого элемента.
+
+-    endToStart: выравнивает завершение элемента по началу другого элемента.
+
+В качестве значения эти поля принимают id (идентификатор) элемента, относительно которого выполняется позиционирование. Если расположение устанавливается относительно контейнера ConstraintLayout, то применяется константа ConstraintLayout.LayoutParams.PARENT_ID
+
+Рассмотрим простейший пример:
+
+```java
+package com.example.viewapp;
+ 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import android.os.Bundle;
+import android.widget.TextView;
+ 
+public class MainActivity extends AppCompatActivity {
+ 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.activity_main);
+ 
+        ConstraintLayout constraintLayout = new ConstraintLayout(this);
+        TextView textView = new TextView(this);
+        // установка текста текстового поля
+        textView.setText("Hello Android");
+        // установка размера текста
+        textView.setTextSize(30);
+ 
+        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams
+                (ConstraintLayout.LayoutParams.WRAP_CONTENT , ConstraintLayout.LayoutParams.WRAP_CONTENT);
+        // позиционирование в левом верхнем углу контейнера
+        // эквивалент app:layout_constraintLeft_toLeftOf="parent"
+        layoutParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
+        // эквивалент app:layout_constraintTop_toTopOf="parent"
+        layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+        // устанавливаем размеры
+        textView.setLayoutParams(layoutParams);
+        // добавляем TextView в ConstraintLayout
+        constraintLayout.addView(textView);
+ 
+        setContentView(constraintLayout);
+    }
+}
+```
+
+В данном случае значение ConstraintLayout.LayoutParams.WRAP_CONTENT для ширины и высоты указывает, что элемент будет иметь те размеры, которые необходимы для того, чтобы вывести на экран его содержимое.
+
+Далее выравниваем левую границу элемента по левой стороне контейнера:
+
+```java
+layoutParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
+```
+
+Эта установка аналогична использованию атрибута app:layout_constraintLeft_toLeftOf="parent".
+
+Затем выравниваем верхнюю границу элемента по верхней стороне контейнера:
+
+```java
+layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+```
+
+Эта установка аналогична использованию атрибута app:layout_constraintTop_toTopOf="parent".
+
+И в конце применяем объект ConstraintLayout.LayoutParams к TextView:
+
+```java
+constraintLayout.addView(textView);
+```
+
+В итоге элемент TextView будет расположен в верхнем левом углу ConstraintLayout:
+
+Рассмотрим другой пример - установку расположения элементов относительно друг друга:
+
+```java
+package com.example.viewapp;
+ 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+ 
+public class MainActivity extends AppCompatActivity {
+ 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.activity_main);
+ 
+        ConstraintLayout constraintLayout = new ConstraintLayout(this);
+ 
+        EditText editText = new EditText(this);
+        editText.setHint("Введите Email");
+        editText.setId(View.generateViewId());
+         
+        Button button = new Button(this);
+        button.setText("Отправить");
+        button.setId(View.generateViewId());
+ 
+        ConstraintLayout.LayoutParams editTextLayout = new ConstraintLayout.LayoutParams
+                (ConstraintLayout.LayoutParams.WRAP_CONTENT , ConstraintLayout.LayoutParams.WRAP_CONTENT);
+        editTextLayout.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
+        editTextLayout.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+        editTextLayout.rightToLeft = button.getId();
+        editText.setLayoutParams(editTextLayout);
+        constraintLayout.addView(editText);
+ 
+        ConstraintLayout.LayoutParams buttonLayout = new ConstraintLayout.LayoutParams
+                (ConstraintLayout.LayoutParams.WRAP_CONTENT , ConstraintLayout.LayoutParams.WRAP_CONTENT);
+        buttonLayout.leftToRight = editText.getId();
+        buttonLayout.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+        button.setLayoutParams(buttonLayout);
+        constraintLayout.addView(button);
+ 
+        setContentView(constraintLayout);
+    }
+}
+```
+
+При расположении одного элемента относительно другого, нам нужно знать id вторрого элемента. Если элемент определен в коде Java, то вначале надо сгенерировать идентификатор:
+
+```java
+editText.setId(View.generateViewId());
+button.setId(View.generateViewId());
+```
+
+Затем можно применять идентификаторы элементов для установки позиционирование позиционионирование. Так, правая граница EditText выравнивается по левой границе кнопки:
+
+```java
+editTextLayout.rightToLeft = button.getId();
+```
+
+А левая граница кнопки выравнивается по правой границе элемента EditText:
+
+```java
+buttonLayout.leftToRight = editText.getId();
+```
+
+## 2.10 Java и Android | LinearLayout
+
+Контейнер LinearLayout представляет простейший контейнер - объект ViewGroup, который упорядочивает все дочерние элементы в одном направлении: по горизонтали или по вертикали. Все элемены расположены один за другим. Направление разметки указывается с помощью атрибута android:orientation.
+
+Если, например, ориентация разметки вертикальная (android:orientation="vertical"), то все элементы располагаются в столбик - по одному элементу на каждой строке. Если ориентация горизонтальная (android:orientation="horizontal"), то элементы располагаются в одну строку. Например, расположим элементы в горизонтальный ряд:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+ 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="Hello"
+        android:textSize="26sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="Android"
+        android:textSize="26sp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:text="World"
+        android:textSize="26sp" />
+</LinearLayout>
+```
+
+Если бы мы указали для LinearLayout атрибут android:orientation="vertical", то элементы размещались бы по вертикали:
+
+### Вес элемента
+
+LinearLayout поддерживает такое свойство, как вес элемента, которое передается атрибутом android:layout_weight. Это свойство принимает значение, указывающее, какую часть оставшегося свободного места контейнера по отношению к другим объектам займет данный элемент. Например, если один элемент у нас будет иметь для свойства android:layout_weight значение 2, а другой - значение 1, то в сумме они дадут 3, поэтому первый элемент будет занимать 2/3 оставшегося пространства, а второй - 1/3.
+
+Если все элементы имеют значение android:layout_weight="1", то все эти элементы будут равномерно распределены по всей площади контейнера:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="Hello"
+        android:background="#e0e0e0"
+        android:layout_weight="1"
+        android:textSize="26sp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#eeeeee"
+        android:text="Android"
+        android:layout_weight="1"
+        android:textSize="26sp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="World"
+        android:background="#bdbdbd"
+        android:layout_weight="1"
+        android:textSize="26sp" />
+</LinearLayout>
+```
+
+В данном случае LinearLayout имеет вертикальную ориентацию, поэтому все элементы будут располагаться сверху вниз. Все три элемента имеют значение android:layout_weight="1", поэтому сумма весов всех элементов будет равна 3, а каждый элемент получит по трети пространства в LinearLayout:
+
+При этом так как у нас вертикальный стек, то нам надо также установить для свойства layout_height значение 0dp. Если бы LinearLayout имел горизонтальную ориентацию, то для свойства layout_width надо было бы установить значение 0dp.
+
+Еще один атрибут android:weightSum позволяет указать сумму весов всех элементов. Например:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="7">
+ 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="Hello"
+        android:background="#e0e0e0"
+        android:layout_weight="1"
+        android:textSize="26sp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#eeeeee"
+        android:text="Android"
+        android:layout_weight="3"
+        android:textSize="26sp" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="World"
+        android:background="#bdbdbd"
+        android:layout_weight="2"
+        android:textSize="26sp" />
+</LinearLayout>
+```
+
+LinearLayout здесь задает сумму весов равную 7. То есть все пространство по вертикали (так как вертикальная ориентация) условно делится на семь равных частей.
+
+Первый TextView имеет вес 1, то есть из этих семи частей занимает только одну. Второй TextView имеет вес 3, то есть занимает три части из семи. И третий имеет вес 2. Итоговая сумма составляет 6. Но так как LinearLayout задает вес 7, то одна часть будет свободна от всех элементов.
+
+### Программное создание LinearLayout
+
+Создание LinearLayout в коде java:
+
+```java
+package com.example.viewapp;
+ 
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+ 
+public class MainActivity extends AppCompatActivity {
+ 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.activity_main);
+        LinearLayout linearLayout = new LinearLayout(this);
+        // горизонтальная ориентация
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+         
+        TextView textView = new TextView(this);
+        textView.setText("Hello");
+        textView.setTextSize(30);
+        // создаем параметры позиционирования для элемента
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams
+                (LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        // устанавливаем отступы
+        layoutParams.setMargins(100, 100, 0, 0);
+        textView.setLayoutParams(layoutParams);
+        // добавляем элемент в LinearLayout
+        linearLayout.addView(textView);
+ 
+        setContentView(linearLayout);
+    }
+}
+```
+
+Дополнительная версия конструктора LinearLayout.LayoutParams() в качестве третьего параметра позволяет указать вес элемента:
+
+```java
+package com.example.viewapp;
+ 
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+ 
+public class MainActivity extends AppCompatActivity {
+ 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+         
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+         
+        // первое текстовое поле
+        TextView textView1 = new TextView(this);
+        textView1.setText("Hello");
+        textView1.setTextSize(30);
+        // textView1 имеет вес 3
+        linearLayout.addView(textView1, new LinearLayout.LayoutParams
+                (LinearLayout.LayoutParams.MATCH_PARENT, 0, 3));
+ 
+        // второе текстовое поле
+        TextView textView2 = new TextView(this);
+        textView2.setText("Android");
+        textView2.setBackgroundColor(0xFFBDBDBD);
+        textView2.setTextSize(30);
+        // textView2 имеет вес 2
+        linearLayout.addView(textView2, new LinearLayout.LayoutParams
+                (LinearLayout.LayoutParams.MATCH_PARENT, 0, 2));
+ 
+        setContentView(linearLayout);
+    }
+}
+```
+
+### Layout_gravity
+
+Атрибут layout_gravity позволяет устанавливать позиционирование относительно LinearLayout. Он принимает следуюшие значения:
+
+-    top: выравнивает элемент по верхней границе контейнера
+
+-    bottom: выравнивает элемент по нижней границе контейнера
+
+-    left: выравнивает элемент по левой границе контейнера
+
+-    right: выравнивает элемент по правой границе контейнера
+
+-   center_vertical: выравнивает элемент по центру по вертикали
+
+-    center_horizontal: выравнивает элемент по центру по горизонтали
+
+-    center: элемент позиционируется в центре
+
+-    fill_vertical: элемент растягивается по вертикали
+
+-    fill_horizontal: элемент растягивается по горизонтали
+
+-    fill: элемент заполняет все пространство контейнера
+
+-    clip_vertical: обрезает верхнюю и нижнюю границу элемента
+
+-    clip_horizontal: обрезает правую и левую границу элемента
+
+-    start: элемент позиционируется в начале (в верхнем левом углу) контейнера
+
+-    end: элемент позиционируется в конце контейнера (в верхнем правом углу)
+
+Например:
+
+```java
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:layout_gravity="left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="Hello Java!"
+        android:background="#e8eaf6"/>
+    <TextView
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="Hello World!"
+        android:background="#e8eaf6"/>
+    <TextView
+        android:layout_gravity="right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="Hello Android!"
+        android:background="#e8eaf6"/>
+    <TextView
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="Hello Kotlin!"
+        android:background="#e8eaf6"/>
+</LinearLayout>
+```
+
+В данном случае первый элемент TextView будет позиционироваться по левой стороне контейнера (android:layout_gravity="left"), второй TextView по центру (android:layout_gravity="center"), третий - по правой стороне (android:layout_gravity="right") и четвертый - по центру (android:layout_gravity="center")
+
+Стоит учитывать ориентацию контейнера. Например, при вертикальной ориентации все элементы будут представлять вертикальный стек, идущий сверху вниз. Поэтому значения, которые относятся к позиционированию элемента по вертикали (например, top или bottom) никак не будут влиять на элемент. Также при горизонтальной ориентации LinearLayout не окажут никакого влияния значения, которые позиционируют элемент по горизонтали, например, left и right.
+
+Для установки программно параметра layout_gravity надо задать поле gravity у объекта LinearLayout.LayoutParams:
+
+```java
+package com.example.viewapp;
+ 
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.Gravity;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+ 
+public class MainActivity extends AppCompatActivity {
+ 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+ 
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams
+                (LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+// установка layout_gravity
+        layoutParams.gravity = Gravity.CENTER;
+        // первое текстовое поле
+        TextView textView1 = new TextView(this);
+        textView1.setText("Hello");
+        textView1.setTextSize(30);
+        linearLayout.addView(textView1, layoutParams);
+        setContentView(linearLayout);
+    }
+}
+```
+
+В качестве значения передается одна из констант класса Gravity, которые аналогичны значениям атрибута.
+
+## 2.11 Java и Android | RelativeLayout
+
+RelativeLayout представляет объект ViewGroup, который располагает дочерние элементы относительно позиции других дочерних элементов разметки или относительно области самой разметки RelativeLayout. Используя относительное позиционирование, мы можем установить элемент по правому краю или в центре или иным способом, который предоставляет данный контейнер. Для установки элемента в файле xml мы можем применять следующие атрибуты:
+
+-    android:layout_above: располагает элемент над элементом с указанным Id
+
+-    android:layout_below: располагает элемент под элементом с указанным Id
+
+-    android:layout_toLeftOf: располагается слева от элемента с указанным Id
+
+-    android:layout_toRightOf: располагается справа от элемента с указанным Id
+
+-    android:layout_toStartOf: располагает начало текущего элемента, где начинается элемент с указанным Id
+
+-    android:layout_toEndOf: располагает начало текущего элемента, где завершается элемент с указанным Id
+
+-    android:layout_alignBottom: выравнивает элемент по нижней границе другого элемента с указанным Id
+
+-    android:layout_alignLeft: выравнивает элемент по левой границе другого элемента с указанным Id
+
+-    android:layout_alignRight: выравнивает элемент по правой границе другого элемента с указанным Id
+
+-    android:layout_alignStart: выравнивает элемент по линии, у которой начинается другой элемент с указанным Id
+
+-    android:layout_alignEnd: выравнивает элемент по линии, у которой завершается другой элемент с указанным Id
+
+-   android:layout_alignTop: выравнивает элемент по верхней границе другого элемента с указанным Id
+
+-    android:layout_alignBaseline: выравнивает базовую линию элемента по базовой линии другого элемента с указанным Id
+
+-    android:layout_alignParentBottom: если атрибут имеет значение true, то элемент прижимается к нижней границе контейнера
+
+-   android:layout_alignParentRight: если атрибут имеет значение true, то элемент прижимается к правому краю контейнера
+
+-   android:layout_alignParentLeft: если атрибут имеет значение true, то элемент прижимается к левому краю контейнера
+
+-   android:layout_alignParentStart: если атрибут имеет значение true, то элемент прижимается к начальному краю контейнера (при левосторонней ориентации текста - левый край)
+
+-    android:layout_alignParentEnd: если атрибут имеет значение true, то элемент прижимается к конечному краю контейнера (при левосторонней ориентации текста - правый край)
+
+-    android:layout_alignParentTop: если атрибут имеет значение true, то элемент прижимается к верхней границе контейнера
+
+-    android:layout_centerInParent: если атрибут имеет значение true, то элемент располагается по центру родительского контейнера
+
+-    android:layout_centerHorizontal: при значении true выравнивает элемент по центру по горизонтали
+
+-    android:layout_centerVertical: при значении true выравнивает элемент по центру по вертикали
+
+Например, позиционирование относительно контейнера RelativeLayout:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+ 
+    <TextView android:text="Left Top"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="26sp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+ 
+    <TextView android:text="Right Top"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="26sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true" />
+ 
+    <TextView android:text="Left Bottom"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="26sp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true" />
+ 
+    <TextView android:text="Right Bottom"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textSize="26sp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>
+```
+
+Для позиционирования относительно другого элемента, нам надо указать id этого элемента. Так, поместим на RelativeLayout текстовое поле и кнопку:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+ 
+    <EditText
+        android:id="@+id/edit_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Отправить"
+        android:layout_alignRight="@id/edit_message"
+        android:layout_below="@id/edit_message"
+        />
+</RelativeLayout>
+```
+
+В данном случае поле EditText располагается по центру в RelativeLayout, а кнопка помещается под EditText и выравнивается по его правой границе:
+
+### Программное создание RelativeLayout
+
+Создадим элемент RelativeLayout программно в коде Java:
+
+```java
+package com.example.viewapp;
+ 
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+ 
+public class MainActivity extends AppCompatActivity {
+ 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+         
+        RelativeLayout relativeLayout = new RelativeLayout(this);
+ 
+        EditText editText = new EditText(this);
+        editText.setId(EditText.generateViewId());
+ 
+        Button button = new Button(this);
+        button.setText("Отправить");
+ 
+        // устанавливаем параметры положения для EditText
+        RelativeLayout.LayoutParams editTextParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        // выравнивание по центру родительского контейнера
+        editTextParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+        // добавляем в RelativeLayout
+        relativeLayout.addView(editText, editTextParams);
+ 
+        // устанавливаем параметры положения для Button
+        RelativeLayout.LayoutParams buttonParams = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        // выравнивание справа и снизу от поля EditText
+        buttonParams.addRule(RelativeLayout.BELOW, editText.getId());
+        buttonParams.addRule(RelativeLayout.ALIGN_RIGHT, editText.getId());
+        // добавляем в RelativeLayout
+        relativeLayout.addView(button, buttonParams);
+ 
+        setContentView(relativeLayout);
+    }
+}
+```
+
+Чтобы задать положение элемента в контейнере, применяется класс RelativeLayout.LayoutParams. Через конструктор устанавливаются значения для для ширины и высоты. Например, у элемента EditText для ширины устанавливается значение MATCH_PARENT, а для высоты - WRAP_CONTENT.
+
+С помощью метода addRule() мы можем добавлять дополнительные правила для позиционирования элемента. Этот метод в качестве параметра принимает числовую константу, которая представляет параметр позиционирования и которая аналогична атрибуту. Например, атрибуту android:layout_centerInParent будет соответствовать константа CENTER_IN_PARENT, а атрибуту android:layout_alignRight константа ALIGN_RIGHT.
+
+Стоит отметить, что в целях упрощения кода для установки id у EditText вызывается метод generateViewId();, который позволяет программно сгенерировать id для элемента управления.
+
+Затем установленный id передается в качестве второго параметра в метод addRule при установке правил для кнопки:
+
+```java
+buttonParams.addRule(RelativeLayout.BELOW, editText.getId());
+```
+
+Тем самым мы указываем относительно какого элемента надо задать расположение.
+
+## 2.12 Java и Android | TableLayout
+
+Контейнер TableLayout структурирует элементы управления в виде таблицы по столбцам и строкам. Определим в файле activity_main.xml элемент TableLayout, который будет включать две строки и два столбца:
+
+```java
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" 
+    android:layout_height="match_parent">
+    <TableRow>
+        <TextView
+            android:layout_weight="0.5"
+            android:text="Логин"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+ 
+        <EditText
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"  />
+    </TableRow>
+ 
+    <TableRow>
+        <TextView
+            android:layout_weight="0.5"
+            android:text="Email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+ 
+        <EditText
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </TableRow>
+</TableLayout>
+```
+
+Используя элемент TableRow, мы создаем отдельную строку. Как разметка узнает сколько столбцов надо создать? Android находит строку с максимальным количеством виджетов одного уровня, и это количество будет означать количество столбцов. Например, в данном случае у нас определены две строки и в каждой по два элемента. Если бы в какой-нибудь из них было бы три виджета, то соответственно столбцов было бы также три, даже если в другой строке осталось бы два виджета.
+
+Причем элемент TableRow наследуется от класса LinearLayout, поэтому мы можем к нему применять тот же функционал, что и к LinearLayout. В частности, для определения пространства для элементов в строке используется атрибут android:layout_weight.
+
+Если какой-то элемент должен быть растянут на ряд столбцов, то мы можем растянуть его с помощью атрибута layout_span, который указывает на какое количество столбцов надо растянуть элемент:
+
+```java
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TableRow>
+        <TextView
+            android:textSize="22sp"
+            android:text="Логин"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content" />
+ 
+        <EditText
+            android:textSize="22sp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"  />
+    </TableRow>
+ 
+    <TableRow>
+        <TextView
+            android:textSize="22sp"
+            android:text="Email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+ 
+        <EditText
+            android:textSize="22sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </TableRow>
+    <TableRow>
+        <Button
+            android:text="Отправить"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_span="2"/>
+    </TableRow>
+</TableLayout> 
+```
+
+Также можно растянуть элемент на всю строку, установив у него атрибут android:layout_weight="1":
+
+```java
+<TableRow>
+    <Button
+        android:text="Отправить"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+</TableRow>
+```
+
+### Программное создание TableLayout
+
+Создадим TableLayout программным образом, переложив на код java самый первый пример из данной статьи:
+
+```java
+package com.example.viewapp;
+ 
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.EditText;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+ 
+public class MainActivity extends AppCompatActivity {
+ 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+ 
+        TableLayout tableLayout = new TableLayout( this);
+         
+        // первая строка
+        TableRow tableRow1 = new TableRow(this);
+ 
+        TextView textView1 = new TextView(this);
+        textView1.setText("Логин");
+        tableRow1.addView(textView1, new TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0.5f));
+ 
+        EditText editText1 = new EditText(this);
+        tableRow1.addView(editText1, new TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
+ 
+        // вторая строка
+        TableRow tableRow2 = new TableRow(this);
+ 
+        TextView textView2 = new TextView(this);
+        textView2.setText("Email");
+        tableRow2.addView(textView2, new TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 0.5f));
+ 
+        EditText editText2 = new EditText(this);
+        tableRow2.addView(editText2, new TableRow.LayoutParams(
+                TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1.f));
+ 
+        tableLayout.addView(tableRow1);
+        tableLayout.addView(tableRow2);
+        setContentView(tableLayout);
+    }
+}
+```
+
+## 2.13 Java и Android | FrameLayout
+
+Контейнер FrameLayout предназначен для вывода на экран одного помещенного в него визуального элемента. Если же мы поместим несколько элементов, то они будут накладываться друг на друга. Тем не менее также можно располагать в FrameLayout несколько элементов.
+
+Допустим, вложим в FrameLayout два элемента TextView:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+ 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        android:textSize="26sp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello Android!"
+        android:textSize="26sp"
+        android:layout_marginTop="50dp"/>
+ 
+</FrameLayout>
+```
+
+Здесь оба элемента позиционируются в одно и то же место - в левый верхний угол контейнера FrameLayout, и чтобы избежать наложения, в данном случае у второго TextView устанавливается отступ сверху в 50 единиц.
+
+Нередко FrameLayout применяется для создания производных контейнеров, например, ScrollView, который обеспечивает прокрутку.
+
+Элементы управления, которые помещаются в FrameLayout, могут установить свое позиционирование с помощью атрибута android:layout_gravity:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+ 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello World!"
+        android:textSize="26sp"
+        android:layout_gravity="center_horizontal" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Welcome to Java World"
+        android:textSize="26sp"
+        android:layout_gravity="center"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello Android!"
+        android:textSize="26sp"
+        android:layout_gravity="bottom|center_horizontal"/>
+ 
+</FrameLayout>
+```
+
+При указании значения мы можем комбинировать ряд значений, разделяя их вертикальной чертой: bottom|center_horizontal
+
+Программное создание FrameLayout в коде MainActivity:
+
+```java
+package com.example.viewapp;
+ 
+import androidx.appcompat.app.AppCompatActivity;
+ 
+import android.os.Bundle;
+import android.view.Gravity;
+import android.widget.FrameLayout;
+import android.widget.TextView;
+ 
+public class MainActivity extends AppCompatActivity {
+ 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+ 
+        FrameLayout frameLayout = new FrameLayout(this);
+        TextView textView = new TextView(this);
+        textView.setText("Hello World!");
+ 
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams
+                (FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        layoutParams.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
+ 
+        textView.setLayoutParams(layoutParams);
+        textView.setTextSize(26);
+        frameLayout.addView(textView);
+        setContentView(frameLayout);
+    }
+}
+```
+
+## 2.14 Java и Android | GridLayout

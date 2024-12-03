@@ -3011,3 +3011,667 @@ public class MainActivity extends AppCompatActivity {
 ```
 
 ## 2.14 Java и Android | GridLayout
+
+GridLayout представляет еще один контейнер, который позволяет создавать табличные представления. GridLayout состоит из коллекции строк, каждая из которых состоит из отдельных ячеек:
+
+```java
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:rowCount="3"
+    android:columnCount="3">
+ 
+    <Button android:text="1" />
+    <Button android:text="2" />
+    <Button android:text="3" />
+    <Button android:text="4" />
+    <Button android:text="5" />
+    <Button android:text="6" />
+    <Button android:text="7" />
+ 
+    <Button android:text="8" />
+ 
+    <Button android:text="9" />
+</GridLayout>
+```
+
+С помощью атрибутов android:rowCount и android:columnCount устанавливается число строк и столбцов соответственно. Так, в данном случае устанавливаем 3 строки и 3 столбца. GridLayout автоматически может позиционировать вложенные элементы управления по строкам. Так, в нашем случае первая кнопка попадает в первую ячейку (первая строка первый столбец), вторая кнопка - во вторую ячейку и так далее.
+
+При этом ширина столбцов устанавливается автоматически по ширине самого широкого элемента.
+
+Однако мы можем явно задать номер столбца и строки для определенного элемента, а при необходимости растянуть на несколько столбцов или строк. Для этого мы можем применять следующие атрибуты:
+
+- android:layout_column: номер столбца (отсчет идет от нуля)
+
+- android:layout_row: номер строки
+
+- android:layout_columnSpan: количество столбцов, на которые растягивается элемент
+
+- android:layout_rowSpan: количество строк, на которые растягивается элемент
+
+Например:
+
+```java
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:rowCount="3"
+    android:columnCount="3">
+ 
+    <Button
+        android:text="1"
+        android:layout_column="0"
+        android:layout_row="0" />
+    <Button android:text="2"
+        android:layout_column="1"
+        android:layout_row="0"/>
+    <Button android:text="3"
+        android:layout_column="2"
+        android:layout_row="0"  />
+    <Button android:text="4"
+        android:layout_width="180dp"
+        android:layout_columnSpan="2"/>
+    <Button android:text="5"
+        android:layout_height="100dp"
+        android:layout_rowSpan="2"/>
+    <Button android:text="6" />
+    <Button android:text="7"/>
+</GridLayout>
+```
+
+### Программное создание GridLayout
+
+Среди методов GridLayout следует отметить методы setRowCount() и setColumnCount(), которые позволяют задать соответственно количество строк и столбцов. Например, определим в коде GridLayout, аналогичнй первому примеру в статье:
+
+```java
+package com.example.viewapp;
+ 
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.Gravity;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+ 
+public class MainActivity extends AppCompatActivity {
+ 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+ 
+        GridLayout gridLayout = new GridLayout( this);
+        // количество строк
+        gridLayout.setRowCount(3);
+        // количество столбцов
+        gridLayout.setColumnCount(3);
+ 
+        for(int i = 1; i <=9; i++){
+            Button btn = new Button(this);
+            btn.setText(String.valueOf(i));
+            gridLayout.addView(btn);
+        }
+        setContentView(gridLayout);
+    }
+}
+```
+
+В данном случае GridLayout имеет три строки и три столбца. При добавлении виджетов (в данном случае кнопок) они последовательно помещаются в ячейки грида по одному виджету в ячейке.
+
+### GridLayout.LayoutParams
+
+Для более детальной настройки расположения виджета в гриде можно использовать класс GridLayout.LayoutParams. Этот класс имеет ряд свойств, которые позволяют настроить расположение:
+
+- columnSpec: задает столбец для расположения в виде объекта GridLayout.Spec
+
+- rowSpec: задает строку для расположения в виде объекта GridLayout.Spec
+
+- leftMargin: задает отступ слева
+
+- rightMargin: задает отступ справа
+
+- topMargin: задает отступ сверху
+
+- bottomMargin: задает отступ снизу
+
+- width: задает ширину виджета
+
+- height: задает высоту виджета
+
+Объект GridLayout.Spec позволяет задать размещение в ячейках столбца или строки. Для создание этого объекта применяется статический метод GridLayout.spec(), который имеет ряд версий. Отметим среди них следующие:
+
+- GridLayout.spec(int): задает столбец или строку, где располагается виджет. Отсчет ячеек начинается с нуля. Виджет занимает только одну ячейку
+
+- GridLayout.spec(int, int): первый параметр задает столбец или строку, где располагается виджет. Второй параметр указывает, насколько ячеек растягивается виджет
+
+- GridLayout.spec(int, android.widget.GridLayout.Alignment): первый параметр задает столбец или строку, где располагается виджет. Второй параметр устанавливает выравнивание виджета
+
+- GridLayout.spec(int, int, android.widget.GridLayout.Alignment): первый параметр задает столбец или строку, где располагается виджет. Второй параметр указывает, насколько ячеек растягивается виджет. Третий параметр устанавливает выравнивание виджета
+
+Пример применения GridLayout.LayoutParams:
+
+```java
+Button btn = new Button(this);
+btn.setText("нажми");
+GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
+ // кнопка помещается в нулевой столбец и растягивается на 2 столбца
+layoutParams.columnSpec = GridLayout.spec(0,2);
+ // кнопка помещается во вторую строку и растягивается на 1 строку
+layoutParams.rowSpec = GridLayout.spec(1,1);
+layoutParams.leftMargin=5;
+layoutParams.rightMargin=5;
+layoutParams.topMargin=4;
+layoutParams.bottomMargin=4;
+layoutParams.width = GridLayout.LayoutParams.MATCH_PARENT;
+layoutParams.height = GridLayout.LayoutParams.WRAP_CONTENT;
+gridLayout.addView(btn, layoutParams);
+```
+
+Например, реализуем в коде второй пример из данной статьи:
+
+```java
+package com.example.viewapp;
+ 
+import androidx.appcompat.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.GridLayout;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
+ 
+public class MainActivity extends AppCompatActivity {
+ 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+ 
+        GridLayout gridLayout = new GridLayout( this);
+ 
+        // количество строк
+        gridLayout.setRowCount(3);
+        // количество столбцов
+        gridLayout.setColumnCount(3);
+ 
+        for(int i = 1; i <=3; i++){
+            Button btn = new Button(this);
+            btn.setText(String.valueOf(i));
+            gridLayout.addView(btn);
+        }
+ 
+        Button btn4 = new Button(this);
+        btn4.setText("4");
+        GridLayout.LayoutParams layoutParams4 = new GridLayout.LayoutParams();
+        layoutParams4.columnSpec = GridLayout.spec(0,2);
+        layoutParams4.width = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, 180, getResources().getDisplayMetrics());
+        gridLayout.addView(btn4, layoutParams4);
+ 
+ 
+        Button btn5 = new Button(this);
+        btn5.setText("5");
+        GridLayout.LayoutParams layoutParams5 = new GridLayout.LayoutParams();
+        layoutParams5.rowSpec = GridLayout.spec(1,2);
+        layoutParams5.height = (int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, 100, getResources().getDisplayMetrics());
+        gridLayout.addView(btn5, layoutParams5);
+ 
+        Button btn6 = new Button(this);
+        btn6.setText("6");
+        Button btn7 = new Button(this);
+        btn7.setText("7");
+        gridLayout.addView(btn6);
+        gridLayout.addView(btn7);
+         
+        setContentView(gridLayout);
+    }
+}
+```
+
+## 2.15 Java и Android | ScrollView
+
+Контейнер ScrollView предназначен для создания прокрутки для такого интерфейса, все элементы которого одномоментно не могут поместиться на экране устройства. ScrollView может вмещать только один элемент, поэтому если мы хотим разместить несколько элементов, то их надо поместить в какой-нибудь контейнер.
+
+Например, определим ряд TextView с большими текстами:
+
+```java
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="What is Lorem Ipsum?"
+            android:textSize="34sp" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry...like Aldus PageMaker including versions of Lorem Ipsum."
+            android:textSize="14sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Why do we use it?"
+            android:layout_marginTop="16dp"
+            android:textSize="34sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lorem Ipsum is simply dummy text of the printing and typesetting industry...like Aldus PageMaker including versions of Lorem Ipsum."
+            android:textSize="14sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Where can I get some?"
+            android:layout_marginTop="16dp"
+            android:textSize="34sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="There are many variations of passages of Lorem Ipsum available ... or non-characteristic words etc."
+            android:textSize="14sp"/>
+    </LinearLayout>
+</ScrollView>
+```
+
+Так как в ScrollView можно поместить только один элемент, то все TextView заключены в LinearLayout. И если площадь экрана будет недостаточной, чтобы поместить все содержимое LinearLayout, то станет доступной прокрутка:
+
+Создание ScrollView программно в коде MainActivity:
+
+```java
+package com.example.viewapp;
+ 
+import androidx.appcompat.app.AppCompatActivity;
+ 
+import android.os.Bundle;
+import android.view.ViewGroup;
+import android.widget.ScrollView;
+import android.widget.TextView;
+ 
+public class MainActivity extends AppCompatActivity {
+ 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //setContentView(R.layout.activity_main);
+ 
+        ScrollView scrollView = new ScrollView(this);
+ 
+        TextView textView = new TextView(this);
+        textView.setText("Lorem Ipsum is simply dummy text of the printing and typesetting industry...like Aldus PageMaker including versions of Lorem Ipsum.");
+        textView.setLayoutParams(new ViewGroup.LayoutParams
+                (ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        textView.setTextSize(26);
+        scrollView.addView(textView);
+        setContentView(scrollView);
+    }
+}
+```
+
+## 2.16 Java и Android | Вложенные layout
+
+Одна layout может содержать другую layout. Для этого применяется элемент include.
+
+Например, добавим в папку res/layout два файла layout, которые пусть будут называться text_panel.xml и button_panel.xml:
+
+В файле text_panel.xml определим следующий код:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/clicksText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:text="0 Clicks"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+По сути здесь просто определено поле TextView для вывода текста.
+
+В файле button_panel.xml определим следующую разметку:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Click"
+        android:onClick="onClick"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+Здесь определена кнопка, нажатия которой мы будем обрабатывать.
+
+Основным файлом разметки, который определяет интерфейс приложения, по-прежнему является activity_main.xml. Изменим его:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+ 
+    <include
+        android:id="@+id/textView"
+        layout="@layout/text_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        />
+    <include
+        android:id="@+id/button"
+        layout="@layout/button_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        />
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+С помощью ConstraintLayout весь интерфейс здесь организуется в виде вертикального стека. С помощью элементов include внутрь ConstraintLayout добавляется содержимое файлов text_panel.xml и button_panel.xml. Для указания названия файла применяется атрибут layout.
+
+Это все равно, что если бы мы напрямую вместо элемента include добавили содержимое файлов. Однако такой способ имеет свои преимущества. Например, какая-то часть разметки, группа элементов управления может повторяться в различных activity. И чтобы не определять по сто раз эти элементы, можно вынести их в отдельный файл layout и с помощью include подключать их.
+
+После добавления в ConstraintLayout к элементам include можно применять все те стандартные атрибуты, которые применяются в этом контейнере к вложенным элементам, например, настроить размеры, расположение. Также стоит отметить, что добавлять внешние layout можно не только в ConstraintLayout, но и в другие контейнеры (LinearLayout, RelativeLayout и т.д.)
+
+Также изменим код MainActivity:
+
+```java
+package com.example.viewapp;
+ 
+import androidx.appcompat.app.AppCompatActivity;
+ 
+import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
+ 
+public class MainActivity extends AppCompatActivity {
+ 
+    int clicks = 0;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+    }
+ 
+    public void onClick(View view){
+        TextView clicksText = findViewById(R.id.clicksText);
+        clicks++;
+        clicksText.setText(clicks + " Clicks");
+    }
+}
+```
+
+В MainActivity мы можем обращаться к элементам во вложенных файлах layout. Например, мы можем установить обработчик нажатия кнопки, в котором при нажатии изменять текст в TextView.
+
+При этом мы несколько раз можем добавлять в один файл layout другой файл layout. Для этого вначале изменим файл button_panel.xml следующим образом:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#3F51B5"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
+    <Button
+        android:id="@+id/clickBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+И изменим файл activity_main.xml:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".MainActivity">
+ 
+    <include
+        layout="@layout/text_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <include layout="@layout/button_panel"
+        android:id="@+id/plus_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/minus_button"/>
+ 
+    <include layout="@layout/button_panel"
+        android:id="@+id/minus_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="36dp"
+        app:layout_constraintLeft_toRightOf="@id/plus_button"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+Теперь файл button_panel.xml добавляется два раза. Важно, что при добавлении этого файла каждому элементу include присвоен определенный id. По этому id мы сможем узнать, о каком именно элементе include идет речь.
+
+Также изменим MainActivity:
+
+```java
+package com.example.viewapp;
+ 
+import androidx.appcompat.app.AppCompatActivity;
+ 
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+ 
+public class MainActivity extends AppCompatActivity {
+ 
+    int clicks = 0;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+ 
+        View plusButtonView = findViewById(R.id.plus_button);
+        View minusButtonView = findViewById(R.id.minus_button);
+        TextView clicksText = findViewById(R.id.clicksText);
+ 
+        Button plusButton = plusButtonView.findViewById(R.id.clickBtn);
+        Button minusButton = minusButtonView.findViewById(R.id.clickBtn);
+ 
+        plusButton.setText("+");
+        minusButton.setText("-");
+ 
+        plusButton.setOnClickListener(v -> {
+            clicks++;
+            clicksText.setText(clicks + " Clicks");
+        });
+        minusButton.setOnClickListener(v -> {
+            clicks--;
+            clicksText.setText(clicks + " Clicks");
+        });
+    }
+}
+```
+
+Здесь вначале мы получаем отдельные элементы include по id. Затем в рамках этих элементов получаем кнопку. После этого мы можем установить у кнопко любой текст и повесить обработчик события нажатия. И таким образом, поведение обеих кнопок будет различаться.
+
+## 2.17 Java и Android | Gravity и позиционирование внутри элемента
+
+Атрибут gravity задает позиционирование содержимого внутри визуального элемента. Он может принимать следующие значения:
+
+-    top: элементы размещаются вверху
+
+-    bottom: элементы размещаются внизу
+
+-    left: элементы размещаются в левой стороне
+
+-    right: элементы размещаются в правой стороне контейнера
+
+-    center_vertical: выравнивает элементы по центру по вертикали
+
+-    center_horizontal: выравнивает элементы по центру по горизонтали
+
+-    center: элементы размещаются по центру
+
+-    fill_vertical: элемент растягивается по вертикали
+
+-    fill_horizontal: элемент растягивается по горизонтали
+
+-    fill: элемент заполняет все пространство контейнера
+
+-    clip_vertical: обрезает верхнюю и нижнюю границу элементов
+
+-    clip_horizontal: обрезает правую и левую границу элементов
+
+-    start: элемент позиционируется в начале (в верхнем левом углу) контейнера
+
+-    end: элемент позиционируется в конце контейнера(в верхнем правом углу)
+
+Например, поместим текст в самый низ в элементе TextView:
+
+```java
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+ 
+    <TextView
+        android:gravity="bottom"
+         
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:text="Hello Android!"
+        android:textSize="30sp"
+        android:background="#e8eaf6"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+ 
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+При необходимости мы можем комбинировать значения, разделяя их вертикальной чертой:
+
+```java
+<TextView
+    android:gravity="bottom|right"
+         
+    android:layout_width="0dp"
+    android:layout_height="200dp"
+    android:text="Hello Android!"
+    android:textSize="30sp"
+    android:background="#e8eaf6"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+```
+
+### Программная установка gravity
+
+Чтобы установить параметр gravity у элемента надо вызвать метод setGravity(). В качестве параметра в метод передается одна из констант класса Gravity, которые аналогичны значениям атрибута (за тем исключенем, что названия в верхнем регистре):
+
+```java
+package com.example.viewapp;
+ 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+ 
+import android.os.Bundle;
+import android.view.Gravity;
+import android.widget.TextView;
+ 
+public class MainActivity extends AppCompatActivity {
+ 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+ 
+        ConstraintLayout constraintLayout = new ConstraintLayout(this);
+        TextView textView = new TextView(this);
+        textView.setText("Hello Android!");
+        textView.setTextSize(30);
+        textView.setBackgroundColor(0xffe8eaf6);
+ 
+        // установка gravity
+        textView.setGravity(Gravity.CENTER);
+ 
+        // установка высоты и ширины
+        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams
+                (ConstraintLayout.LayoutParams.MATCH_CONSTRAINT, 200);
+        layoutParams.leftToLeft = ConstraintLayout.LayoutParams.PARENT_ID;
+        layoutParams.rightToRight = ConstraintLayout.LayoutParams.PARENT_ID;
+        layoutParams.topToTop = ConstraintLayout.LayoutParams.PARENT_ID;
+        layoutParams.bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID;
+        textView.setLayoutParams(layoutParams);
+ 
+        constraintLayout.addView(textView);
+        setContentView(constraintLayout);
+    }
+}
+```
+
+Для сочетания нескольких значений также можно использовать вертикальную черту:
+
+```java
+textView.setGravity(Gravity.BOTTOM | Gravity.CENTER);
+```
